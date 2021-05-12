@@ -18,7 +18,6 @@ const Pagination = (props) => {
             className={page === currentPage ? "page-item active" : "page-item"}
           >
             <a
-              href=""
               className="page-link"
               style={{ cursor: "grab" }} // https://www.w3schools.com/cssref/pr_class_cursor.asp
               onClick={() => onPageChange(page)}
