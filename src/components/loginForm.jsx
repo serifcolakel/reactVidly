@@ -8,9 +8,9 @@ class LoginForm extends Component {
     errors: {},
   };
   schema = {
-    username: Joi.string().min(8).max(12).required(),
-    password: Joi.string().min(4).max(12).required(),
-    email: Joi.string().email({ tlds: false }).required(),
+    username: Joi.string().min(4).max(12).required().label("Username"),
+    password: Joi.string().min(4).max(12).required().label("Password"),
+    email: Joi.string().email({ tlds: false }).required().label("E-mail"),
   };
 
   username = React.createRef();
@@ -19,35 +19,21 @@ class LoginForm extends Component {
   //   }
 
   validateProperty = ({ name, value }) => {
-    if (name === "username") {
-      if (value.trim() === "") return "Username is required.";
-    }
-    if (name === "password") {
-      if (value.trim() === "") return "Password is required.";
-    }
-    if (name === "email") {
-      if (value.trim() === "") return "Email is required.";
-    }
+    const obj = { [name]: value }; // "name" ne ise ona göre işlev yapacak (dinamik kodlama)
+    const schema = { [name]: this.schema[name] };
+    const { error } = Joi.validate(obj, schema, { abortEarly: false });
+    return error ? error.details[0].message : null;
   };
 
   validate = () => {
-    const restult = Joi.validate(this.state.account, this.schema, {
-      abortEarly: false,
-    });
-    console.log(restult);
+    const options = { abortEarly: false };
+    const { error } = Joi.validate(this.state.account, this.schema, options);
+    //for beginner (for me ) :)
+    if (!error) return null;
 
     const errors = {};
-
-    //const { account } = this.state;
-    if (this.state.account.username.trim() === "")
-      errors.username = "username is required";
-
-    if (this.state.account.password.trim() === "")
-      errors.password = "Password is required";
-    if (this.state.account.email.trim() === "")
-      errors.email = "Email is required";
-
-    return Object.keys(errors).length === 0 ? "identity verified" : errors;
+    for (let item of error.details) errors[item.path[0]] = item.message;
+    return errors;
   };
 
   handleChange = ({ currentTarget: input }) => {
@@ -67,10 +53,9 @@ class LoginForm extends Component {
     // const username = document.getElementById("username").value;
     // const username = this.username.current.value;
     const errors = this.validate();
-    //console.log(errors);
     this.setState({ errors: errors || {} });
     if (errors) return;
-
+    //console.log(errors);
     console.log("submitted");
   };
 
@@ -157,11 +142,13 @@ class LoginForm extends Component {
 
             <button
               type="submit"
+              disabled={this.validate()}
               onClick={this.login}
               className="btn btn-primary"
             >
               Login
             </button>
+
             <button
               onClick={this.signup}
               style={{ marginLeft: "35px" }}
