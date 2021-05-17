@@ -1,34 +1,87 @@
 import React, { Component } from "react";
+import Input from "./common/input";
+import Joi from "joi-browser"; //npm i joi-browser
 
 class LoginForm extends Component {
-  username = React.createRef();
+  state = {
+    account: { username: "", password: "", email: "" },
+    errors: {},
+  };
+  schema = {
+    username: Joi.string().min(8).max(12).required(),
+    password: Joi.string().min(4).max(12).required(),
+    email: Joi.string().email({ tlds: false }).required(),
+  };
 
+  username = React.createRef();
   //   componentDidMount() {
   //     this.username.current.focus(); //tıklanan alana odaklanacak
   //   }
+
+  validateProperty = ({ name, value }) => {
+    if (name === "username") {
+      if (value.trim() === "") return "Username is required.";
+    }
+    if (name === "password") {
+      if (value.trim() === "") return "Password is required.";
+    }
+    if (name === "email") {
+      if (value.trim() === "") return "Email is required.";
+    }
+  };
+
+  validate = () => {
+    const restult = Joi.validate(this.state.account, this.schema, {
+      abortEarly: false,
+    });
+    console.log(restult);
+
+    const errors = {};
+
+    //const { account } = this.state;
+    if (this.state.account.username.trim() === "")
+      errors.username = "username is required";
+
+    if (this.state.account.password.trim() === "")
+      errors.password = "Password is required";
+    if (this.state.account.email.trim() === "")
+      errors.email = "Email is required";
+
+    return Object.keys(errors).length === 0 ? "identity verified" : errors;
+  };
+
   handleChange = ({ currentTarget: input }) => {
+    const errors = { ...this.state.errors };
+    const errorMessage = this.validateProperty(input);
+    if (errorMessage) errors[input.name] = errorMessage;
+    else delete errors[input.name];
+
     const account = { ...this.state.account };
     account[input.name] = input.value;
-    this.setState({ account });
+    this.setState({ account, errors });
   };
+
   handleSubmit = (e) => {
     e.preventDefault(); //formun yeniden yollanmasını engelliyoruz
     //call the server
     // const username = document.getElementById("username").value;
     // const username = this.username.current.value;
+    const errors = this.validate();
+    //console.log(errors);
+    this.setState({ errors: errors || {} });
+    if (errors) return;
+
     console.log("submitted");
   };
-  state = {
-    account: { username: "", password: "", email: "" },
-  };
+
   render() {
-    const { account } = this.state;
+    const { account, errors } = this.state;
     return (
       <div className="d-flex">
         <div className="center">
           <form onSubmit={this.handleSubmit}>
             <h1>Login</h1>
-            <div className="form-group">
+            {/* <div className="form-group">
               <label htmlFor="username">Username</label>
               <input
                 value={account.username}
@@ -42,8 +95,17 @@ class LoginForm extends Component {
                 placeholder="Enter username"
                 style={{ textAlign: "center" }}
               />
-            </div>
-            <div className="form-group">
+            </div> */}
+            <Input
+              name="username"
+              type="text"
+              placeholder="Enter Username"
+              value={account.username}
+              label="Username"
+              onChange={this.handleChange}
+              error={errors.username}
+            />
+            {/* <div className="form-group">
               <label htmlFor="email">Email address</label>
               <input
                 value={account.email}
@@ -59,8 +121,17 @@ class LoginForm extends Component {
               <small id="emailHelp" className="form-text text-muted">
                 We'll never share your email with anyone else.
               </small>
-            </div>
-
+            </div> */}
+            <Input
+              name="email"
+              type="email"
+              placeholder="Enter E-mail"
+              value={account.email}
+              label="Email"
+              onChange={this.handleChange}
+              error={errors.email}
+            />
+            {/* 
             <div className="form-group">
               <label htmlFor="password">Password</label>
               <input
@@ -73,7 +144,16 @@ class LoginForm extends Component {
                 id="password"
                 placeholder="Password"
               />
-            </div>
+            </div> */}
+            <Input
+              name="password"
+              type="password"
+              placeholder="Enter Password"
+              value={account.password}
+              label="Password"
+              onChange={this.handleChange}
+              error={errors.password}
+            />
 
             <button
               type="submit"
