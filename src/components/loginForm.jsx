@@ -1,10 +1,10 @@
-import React, { Component } from "react";
-import Input from "./common/input";
+import React from "react";
 import Joi from "joi-browser"; //npm i joi-browser
+import Form from "./common/form";
 
-class LoginForm extends Component {
+class LoginForm extends Form {
   state = {
-    account: { username: "", password: "", email: "" },
+    data: { username: "", password: "", email: "" },
     errors: {},
   };
   schema = {
@@ -17,50 +17,12 @@ class LoginForm extends Component {
   //   componentDidMount() {
   //     this.username.current.focus(); //tıklanan alana odaklanacak
   //   }
-
-  validateProperty = ({ name, value }) => {
-    const obj = { [name]: value }; // "name" ne ise ona göre işlev yapacak (dinamik kodlama)
-    const schema = { [name]: this.schema[name] };
-    const { error } = Joi.validate(obj, schema, { abortEarly: false });
-    return error ? error.details[0].message : null;
-  };
-
-  validate = () => {
-    const options = { abortEarly: false };
-    const { error } = Joi.validate(this.state.account, this.schema, options);
-    //for beginner (for me ) :)
-    if (!error) return null;
-
-    const errors = {};
-    for (let item of error.details) errors[item.path[0]] = item.message;
-    return errors;
-  };
-
-  handleChange = ({ currentTarget: input }) => {
-    const errors = { ...this.state.errors };
-    const errorMessage = this.validateProperty(input);
-    if (errorMessage) errors[input.name] = errorMessage;
-    else delete errors[input.name];
-
-    const account = { ...this.state.account };
-    account[input.name] = input.value;
-    this.setState({ account, errors });
-  };
-
-  handleSubmit = (e) => {
-    e.preventDefault(); //formun yeniden yollanmasını engelliyoruz
+  doSubmit = () => {
     //call the server
-    // const username = document.getElementById("username").value;
-    // const username = this.username.current.value;
-    const errors = this.validate();
-    this.setState({ errors: errors || {} });
-    if (errors) return;
-    //console.log(errors);
     console.log("submitted");
   };
 
   render() {
-    const { account, errors } = this.state;
     return (
       <div className="d-flex">
         <div className="center">
@@ -69,7 +31,7 @@ class LoginForm extends Component {
             {/* <div className="form-group">
               <label htmlFor="username">Username</label>
               <input
-                value={account.username}
+                value={data.username}
                 autoFocus //componentDidMount yerine kullanılır
                 ref={this.username}
                 onChange={this.handleChange}
@@ -81,19 +43,22 @@ class LoginForm extends Component {
                 style={{ textAlign: "center" }}
               />
             </div> */}
-            <Input
+            {/* <Input
               name="username"
               type="text"
               placeholder="Enter Username"
-              value={account.username}
+              value={data.username}
               label="Username"
               onChange={this.handleChange}
               error={errors.username}
-            />
+            /> */}
+
+            {this.renderInput("username", "text", "Username")}
+
             {/* <div className="form-group">
               <label htmlFor="email">Email address</label>
               <input
-                value={account.email}
+                value={data.email}
                 type="email"
                 onChange={this.handleChange}
                 className="form-control"
@@ -107,21 +72,24 @@ class LoginForm extends Component {
                 We'll never share your email with anyone else.
               </small>
             </div> */}
-            <Input
+            {/* <Input
               name="email"
               type="email"
               placeholder="Enter E-mail"
-              value={account.email}
+              value={data.email}
               label="Email"
               onChange={this.handleChange}
               error={errors.email}
-            />
-            {/* 
+            /> */}
+
+            {this.renderInput("email", "email", "E-mail")}
+
+            {/* { 
             <div className="form-group">
               <label htmlFor="password">Password</label>
               <input
                 style={{ textAlign: "center" }}
-                value={account.password}
+                value={data.password}
                 onChange={this.handleChange}
                 type="password"
                 name="password"
@@ -129,18 +97,20 @@ class LoginForm extends Component {
                 id="password"
                 placeholder="Password"
               />
-            </div> */}
-            <Input
+           </div> */}
+            {/*    { <Input
               name="password"
               type="password"
               placeholder="Enter Password"
-              value={account.password}
+              value={data.password}
               label="Password"
               onChange={this.handleChange}
               error={errors.password}
-            />
+            /> */}
 
-            <button
+            {this.renderInput("password", "password", "Password")}
+
+            {/* <button
               type="submit"
               disabled={this.validate()}
               onClick={this.login}
@@ -155,7 +125,9 @@ class LoginForm extends Component {
               className="btn btn-success"
             >
               Signup
-            </button>
+            </button> */}
+            {this.renderButton("Login", "btn btn-primary", this.validate())}
+            {this.renderButton("SigUp", "btn btn-success")}
           </form>
         </div>
       </div>
