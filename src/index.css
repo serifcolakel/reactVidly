@@ -9,19 +9,23 @@ body {
 }
 .navbar{
   margin-bottom:30px;
-  border: 1px solid red;
+  background-color: aqua;
+  border: 1px solid lightgreen;
   border-radius: 20px;
 }
 .nav-item{
-  cursor: crosshair;
+  cursor: pointer;
 }
 .container{
-  height: 100%;
+  border-radius: 20px;
+  margin:10px;
+  height: 90vh;
    max-width: 100% !important;
    display: flex !important;
   flex-direction: column !important;
   justify-content: center !important;
   text-align: center !important;
+  background-image: url('https://mdbcdn.b-cdn.net/img/Photos/Others/images/76.jpg');
 }
 .col-3{
   margin:5rem !important;
@@ -30,6 +34,7 @@ body {
   justify-content: center !important;
   /* align-self: center !important; */
   text-align: center;
+  cursor: pointer;
 }
 .pagination{
   display: flex !important;
@@ -37,6 +42,7 @@ body {
    justify-content: center !important;
    /* align-self: center !important; */
    text-align: center;
+   cursor:pointer;
 }
 .col{
   text-align: center;
@@ -50,5 +56,7 @@ body {
   align-self: center;
 
 }
-
+.clickable:hover,.nav-item:hover,.list-group-item:hover{
+  color:lightcoral;
+}
 

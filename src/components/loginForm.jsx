@@ -82,7 +82,7 @@ class LoginForm extends Form {
               error={errors.email}
             /> */}
 
-            {this.renderInput("email", "email", "E-mail")}
+            {this.renderInput("email", "email", "E-mail address")}
 
             {/* { 
             <div className="form-group">

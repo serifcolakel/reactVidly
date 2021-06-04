@@ -23,7 +23,7 @@ class RegisterForm extends Form {
       <div className="d-flex">
         <div className="center">
           <form onSubmit={this.handleSubmit}>
-            <h1>Login</h1>
+            <h1>Register 2 </h1>
             {this.renderInput("username", "text", "Username")}
             {this.renderInput("email", "email", "E-mail")}
             {this.renderInput("password", "password", "Password")}

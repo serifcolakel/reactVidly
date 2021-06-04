@@ -28,7 +28,6 @@ class Form extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault(); //formun yeniden yollanmasını engelliyoruz
-
     // const username = document.getElementById("username").value;
     // const username = this.username.current.value;
     const errors = this.validate();
@@ -42,7 +41,6 @@ class Form extends Component {
     const errorMessage = this.validateProperty(input);
     if (errorMessage) errors[input.name] = errorMessage;
     else delete errors[input.name];
-
     const data = { ...this.state.data };
     data[input.name] = input.value;
     this.setState({ data, errors });
@@ -80,7 +78,7 @@ class Form extends Component {
       <Input
         name={name}
         type={type}
-        placeholder={"enter"}
+        placeholder={"Please, enter your " + label}
         value={data[name]}
         label={label}
         onChange={this.handleChange}
